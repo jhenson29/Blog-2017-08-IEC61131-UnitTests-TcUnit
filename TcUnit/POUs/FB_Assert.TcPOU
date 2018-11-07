@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.7">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_Assert" Id="{031bc23b-feb9-4693-8484-d374894ef856}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC FB_Assert
 VAR
@@ -11,6 +11,8 @@ VAR
 	sLastInstance		: STRING[255];
 	sLastMessage		: STRING[255];
 	nLastState			: UDINT;
+	nTestCount			: DINT;
+	nTestFailCount		: DINT;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -37,6 +39,7 @@ END_VAR]]></Declaration>
 	PrintFailed(TO_STRING(bActual), TO_STRING(bExpected), '', sMessage, 'BOOL');
 	AreEqualBOOL := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualBOOL := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -57,6 +60,7 @@ END_VAR]]></Declaration>
 				'BYTE');
 	AreEqualBYTE := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualBYTE := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -73,6 +77,7 @@ END_VAR]]></Declaration>
 	PrintFailed(TO_STRING(nActual), TO_STRING(nExpected), '', sMessage, 'DINT');
 	AreEqualDINT := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualDINT := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -86,6 +91,7 @@ VAR_INPUT
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF (nExpected <> nActual) THEN
+	CountTestFail();
 	PrintFailed(CONCAT('16#', DWORD_TO_HEXSTR(nActual, 8, FALSE)),
 				CONCAT('16#', DWORD_TO_HEXSTR(nExpected, 8, FALSE)),
 				'',
@@ -93,6 +99,7 @@ END_VAR]]></Declaration>
 				'DWORD');
 	AreEqualDWORD := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualDWORD := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -122,6 +129,7 @@ IF (NOT bEqual) THEN
 	PrintFailed('', '', '', sMessage, 'GUID');
 	AreEqualGUID := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualGUID := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -142,6 +150,7 @@ END_VAR]]></Declaration>
 				'HRESULT');
 	AreEqualHRESULT := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualHRESULT := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -158,6 +167,7 @@ END_VAR]]></Declaration>
 	PrintFailed(TO_STRING(nActual), TO_STRING(nExpected), '', sMessage, 'INT');
 	AreEqualINT := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualINT := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -174,6 +184,7 @@ END_VAR]]></Declaration>
 	PrintFailed(TO_STRING(nActual), TO_STRING(nExpected), '', sMessage, 'LINT');
 	AreEqualLINT := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualLINT := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -211,6 +222,7 @@ END_VAR]]></Declaration>
 	PrintFailed(fbFormatActual.sOut, fbFormatExpected.sOut, TO_STRING(fTolerance), sMessage, 'LREAL');
 	AreEqualLREAL := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualLREAL := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -228,6 +240,7 @@ END_VAR]]></Declaration>
 	PrintFailed(TO_STRING(tActual), TO_STRING(tExpected), TO_STRING(tTolerance), sMessage, 'LTIME');
 	AreEqualLTIME := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualLTIME := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -248,6 +261,7 @@ END_VAR]]></Declaration>
 				'LWORD');
 	AreEqualLWORD := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualLWORD := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -265,6 +279,7 @@ END_VAR]]></Declaration>
 	PrintFailed('', '', '', sMessage, 'MEM');
 	AreEqualMEM := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualMEM := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -302,6 +317,7 @@ END_VAR]]></Declaration>
 	PrintFailed(fbFormatActual.sOut, fbFormatExpected.sOut, TO_STRING(fTolerance), sMessage, 'REAL');
 	AreEqualREAL := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualREAL := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -318,6 +334,7 @@ END_VAR]]></Declaration>
 	PrintFailed(TO_STRING(nActual), TO_STRING(nExpected), '', sMessage, 'SINT');
 	AreEqualSINT := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualSINT := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -334,6 +351,7 @@ END_VAR]]></Declaration>
 	PrintFailed(sActual, sExpected, '', sMessage, 'STRING');
 	AreEqualSTRING := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualSTRING := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -351,6 +369,7 @@ END_VAR]]></Declaration>
 	PrintFailed(TO_STRING(tActual), TO_STRING(tExpected), TO_STRING(tTolerance), sMessage, 'TIME');
 	AreEqualTIME := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualTIME := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -367,6 +386,7 @@ END_VAR]]></Declaration>
 	PrintFailed(TO_STRING(nActual), TO_STRING(nExpected), '', sMessage, 'UDINT');
 	AreEqualUDINT := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualUDINT := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -383,6 +403,7 @@ END_VAR]]></Declaration>
 	PrintFailed(TO_STRING(nActual), TO_STRING(nExpected), '', sMessage, 'UINT');
 	AreEqualUINT := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualUINT := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -399,6 +420,7 @@ END_VAR]]></Declaration>
 	PrintFailed(TO_STRING(nActual), TO_STRING(nExpected), '', sMessage, 'ULINT');
 	AreEqualULINT := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualULINT := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -415,6 +437,7 @@ END_VAR]]></Declaration>
 	PrintFailed(TO_STRING(nActual), TO_STRING(nExpected), '', sMessage, 'USINT');
 	AreEqualUSINT := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualUSINT := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -435,8 +458,22 @@ END_VAR]]></Declaration>
 				'WORD');
 	AreEqualWORD := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	AreEqualWORD := TRUE;
 END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CountTest" Id="{1f9e8c75-89ea-4e2d-ab2e-02644fba8ff7}">
+      <Declaration><![CDATA[METHOD PRIVATE CountTest
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[nTestCount := nTestCount + 1;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CountTestFail" Id="{79f529c6-0d1d-429f-81c8-9726a4c1276f}">
+      <Declaration><![CDATA[METHOD PRIVATE CountTestFail]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[nTestFailCount := nTestFailCount + 1;]]></ST>
       </Implementation>
     </Method>
     <Method Name="FB_init" Id="{5606c8dc-7239-4f13-999c-021a852b6d7d}">
@@ -463,6 +500,7 @@ END_VAR
 	PrintFailed(BOOL_TO_STRING(bCondition), 'FALSE', '', sMessage, 'BOOL');
 	IsFalse := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	IsFalse := TRUE;
 END_IF
 ]]></ST>
@@ -479,6 +517,7 @@ END_VAR]]></Declaration>
 	PrintFailed(TO_STRING(bCondition), 'TRUE', '', sMessage, 'BOOL');
 	IsTrue := FALSE;
 ELSE
+	PrintPassed(sMessage);
 	IsTrue := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -507,7 +546,10 @@ VAR
 	sString		: STRING(255);
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF ((THIS^.sLastMessage <> sMessage) OR (THIS^.nLastState <> THIS^.nState) OR THIS^.bMultipleLogFlag) THEN
+        <ST><![CDATA[CountTest();
+CountTestFail();
+
+IF ((THIS^.sLastMessage <> sMessage) OR (THIS^.nLastState <> THIS^.nState) OR THIS^.bMultipleLogFlag) THEN
 	THIS^.sLastInstance := THIS^.sInstanceName;
 	THIS^.sLastMessage := sMessage;
 	THIS^.nLastState := THIS^.nState;
@@ -563,7 +605,9 @@ VAR
 	sString		: STRING(255);	
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF ((THIS^.sLastMessage <> sMessage) OR (THIS^.nLastState <> THIS^.nState) OR THIS^.bMultipleLogFlag) THEN
+        <ST><![CDATA[CountTest();
+
+IF ((THIS^.sLastMessage <> sMessage) OR (THIS^.nLastState <> THIS^.nState) OR THIS^.bMultipleLogFlag) THEN
 	THIS^.sLastInstance := THIS^.sInstanceName;
 	THIS^.sLastMessage := sMessage;
 	THIS^.nLastState := THIS^.nState;
@@ -583,6 +627,15 @@ END_VAR]]></Declaration>
 	ADSLOGSTR(msgCtrlMask := ADSLOG_MSGTYPE_WARN, msgFmtStr := 'Passed: %s', strArg := sString);
 END_IF
 ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PrintSummary" Id="{e08f896e-2770-4ea7-84d4-86f16bdeb3a8}">
+      <Declaration><![CDATA[METHOD PUBLIC PrintSummary
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ADSLOGSTR(msgCtrlMask := ADSLOG_MSGTYPE_WARN, msgFmtStr := 'Tests Run: %s', strArg := TO_STRING(nTestCount));
+ADSLOGSTR(msgCtrlMask := ADSLOG_MSGTYPE_WARN, msgFmtStr := 'Tests Failed: %s', strArg := TO_STRING(nTestFailCount));
+ADSLOGSTR(msgCtrlMask := ADSLOG_MSGTYPE_WARN, msgFmtStr := 'Tests Passed: %s', strArg := TO_STRING(nTestCount - nTestFailCount));]]></ST>
       </Implementation>
     </Method>
     <Property Name="State" Id="{776f71a8-f8f1-4331-b1fe-2c42a22c0b57}">
@@ -623,113 +676,170 @@ THIS^.nState := 16#FFFF;]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualBOOL">
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="7" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualBYTE">
       <LineId Id="3" Count="1" />
       <LineId Id="6" Count="1" />
       <LineId Id="18" Count="1" />
-      <LineId Id="10" Count="2" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="12" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualDINT">
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="7" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualDWORD">
-      <LineId Id="3" Count="1" />
-      <LineId Id="6" Count="6" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="6" Count="5" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="12" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualGUID">
       <LineId Id="3" Count="10" />
-      <LineId Id="19" Count="2" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="21" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualHRESULT">
       <LineId Id="3" Count="1" />
-      <LineId Id="6" Count="6" />
+      <LineId Id="6" Count="5" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="12" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualINT">
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="7" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualLINT">
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="7" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualLREAL">
-      <LineId Id="3" Count="19" />
+      <LineId Id="3" Count="18" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="22" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualLTIME">
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="7" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualLWORD">
       <LineId Id="3" Count="1" />
-      <LineId Id="6" Count="6" />
+      <LineId Id="6" Count="5" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="12" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualMEM">
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="7" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualREAL">
-      <LineId Id="3" Count="19" />
+      <LineId Id="3" Count="18" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="22" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualSINT">
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="7" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualSTRING">
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="7" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualTIME">
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="7" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualUDINT">
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="7" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualUINT">
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="7" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualULINT">
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="7" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualUSINT">
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="7" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.AreEqualWORD">
       <LineId Id="3" Count="1" />
-      <LineId Id="6" Count="6" />
+      <LineId Id="6" Count="5" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="12" Count="0" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Assert.CountTest">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Assert.CountTestFail">
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.FB_init">
       <LineId Id="7" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.IsFalse">
-      <LineId Id="10" Count="4" />
+      <LineId Id="10" Count="3" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="14" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="15" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.IsTrue">
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="7" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.MultipleLog.Set">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.PrintFailed">
+      <LineId Id="85" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="86" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="34" Count="1" />
       <LineId Id="73" Count="0" />
@@ -740,6 +850,7 @@ THIS^.nState := 16#FFFF;]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.PrintPassed">
+      <LineId Id="71" Count="1" />
       <LineId Id="17" Count="2" />
       <LineId Id="63" Count="0" />
       <LineId Id="20" Count="7" />
@@ -747,6 +858,10 @@ THIS^.nState := 16#FFFF;]]></ST>
       <LineId Id="53" Count="0" />
       <LineId Id="58" Count="0" />
       <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Assert.PrintSummary">
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_Assert.State.Get">
       <LineId Id="2" Count="0" />
